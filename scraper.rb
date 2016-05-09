@@ -63,6 +63,7 @@ def build_notice(el)
   }
   page    = get(notice['link'])
   details = extract_detail(page)
+  puts "Extracting #{details['address']}"
   notice.merge!(details)
 end
 

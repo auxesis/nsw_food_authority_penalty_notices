@@ -68,21 +68,33 @@ def build_notice(el)
 end
 
 def geocode(notice)
-  puts "Geocoding #{notice['offence_address']}"
-  a = Geokit::Geocoders::GoogleGeocoder.geocode(notice['offence_address'])
-  location = {
-    'lat' => a.lat,
-    'lng' => a.lng,
-  }
+  @addresses ||= {}
+
+  address = notice['address']
+
+  if @addresses[address]
+    puts "Geocoding [cache hit] #{address}"
+    location = @addresses[address]
+  else
+    puts "Geocoding #{address}"
+    a = Geokit::Geocoders::GoogleGeocoder.geocode(address)
+    location = {
+      'lat' => a.lat,
+      'lng' => a.lng,
+    }
+
+    @addresses[address] = location
+  end
+
   notice.merge!(location)
 end
 
 def base
-  "http://www.foodauthority.nsw.gov.au"
+  "http://www.foodauthority.nsw.gov.au/penalty-notices/default.aspx"
 end
 
 def main
-  page = get("#{base}/penalty-notices/default.aspx?template=results")
+  page = get("#{base}?template=results")
 
   notices = extract_notices(page)
   puts "Found #{notices.size} notices"

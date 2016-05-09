@@ -3,6 +3,9 @@ require 'mechanize'
 require 'geokit'
 require 'pry'
 
+# Set an API key if provided
+Geokit::Geocoders::GoogleGeocoder.api_key = ENV['MORPH_GOOGLE_API_KEY'] if ENV['MORPH_GOOGLE_API_KEY']
+
 @mappings = {
   'Penalty notice number' => 'offence_id',
   'Trade name of party served' => 'trading_name',

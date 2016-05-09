@@ -4,19 +4,17 @@ require 'geokit'
 require 'pry'
 
 @mappings = {
-  'Trade name' => 'trading_name',
-  'Name of convicted' => 'name_of_convicted',
-  'Usual place of business' => 'place_of_business',
-  'Council area' => 'council',
-  'Address at which offence was committed' => 'offence_address',
-  'Date of offence' => 'offence_date',
-  'Nature and circumstances of offence' => 'description',
-  'Date of decision' => 'decision_date',
-  'Decision' => 'decision',
-  'Court' => 'court',
-  'Penalty' => 'penalty',
-  'Decision details' => 'decision_details',
-  'Prosecution brought by or for' => 'prosecution_brought_by',
+  'Penalty notice number' => 'offence_id',
+  'Trade name of party served' => 'trading_name',
+  'Address(where offence occurred)' => 'address',
+  'Council(where offence occurred)' => 'council',
+  'Date of alleged offence' => 'offence_date',
+  'Offence code' => 'offence_code',
+  'Nature & circumstances of alleged offence' => 'offence_nature',
+  'Amount of penalty' => 'penalty_amount',
+  'Name of party served' => 'party_served',
+  'Date penalty notice served' => 'date_served',
+  'Issued by' => 'issued_by',
   'Notes' => 'notes',
 }
 

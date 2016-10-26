@@ -105,9 +105,7 @@ def main
 
   notices = extract_notices(page)
   puts "### Found #{notices.size} notices"
-
   new_notices = notices.select {|r| !existing_record_ids.include?(r['link']) }
-
   puts "### There are #{new_notices.size} new notices"
 
   new_notices.map! {|n| build_notice(n) }

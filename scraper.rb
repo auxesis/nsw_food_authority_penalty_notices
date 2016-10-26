@@ -113,7 +113,7 @@ def main
   new_notices.map! {|n| geocode(n) }
 
   # Serialise
-  ScraperWiki.save_sqlite(['link'], notices)
+  ScraperWiki.save_sqlite(['link'], new_notices)
 
   puts "Done"
 end

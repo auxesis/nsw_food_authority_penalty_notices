@@ -55,15 +55,12 @@ end
 def extract_notices(page)
   notices = []
   page.search('div.contentInfo div.table-container tbody tr').each do |el|
-    notices << el
+    notices << { 'link' => "#{base}#{el.search('a').first['href']}" }
   end
   notices
 end
 
-def build_notice(el)
-  notice = {
-    'link' => "#{base}#{el.search('a').first['href']}"
-  }
+def build_notice(notice)
   page    = get(notice['link'])
   details = extract_detail(page)
   puts "Extracting #{details['address']}"
@@ -96,19 +93,29 @@ def base
   "http://www.foodauthority.nsw.gov.au/penalty-notices/default.aspx"
 end
 
+def existing_record_ids
+  return @cached if @cached
+  @cached = ScraperWiki.select('link from data').map {|r| r['link']}
+rescue SqliteMagic::NoSuchTable
+  []
+end
+
 def main
   page = get("#{base}?template=results")
 
   notices = extract_notices(page)
-  puts "Found #{notices.size} notices"
-  notices.map! {|n| build_notice(n) }
-  notices.reject! {|n| n.keys.size == 1 }
-  notices.map! {|n| geocode(n) }
+  puts "### Found #{notices.size} notices"
+
+  new_notices = notices.select {|r| !existing_record_ids.include?(r['link']) }
+
+  puts "### There are #{new_notices.size} new notices"
+
+  new_notices.map! {|n| build_notice(n) }
+  new_notices.reject! {|n| n.keys.size == 1 }
+  new_notices.map! {|n| geocode(n) }
 
   # Serialise
-  notices.each do |notice|
-    ScraperWiki.save_sqlite(['link'], notice)
-  end
+  ScraperWiki.save_sqlite(['link'], notices)
 
   puts "Done"
 end
